@@ -1,0 +1,85 @@
+name: Monthly forecast
+
+# Citi Bike publishes the previous month's trips in the first days of each month.
+on:
+  schedule:
+    - cron: "17 13 10 * *" # 13:17 UTC on the 10th of every month
+  workflow_dispatch:
+    inputs:
+      trials:
+        description: "Optuna trials"
+        default: "40"
+
+permissions:
+  contents: write # commit the forecast log + README results table
+  pages: write # publish the dashboard
+  id-token: write
+
+concurrency:
+  group: forecast
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: requirements*.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Test before running on real data
+        run: pytest -q
+
+      # Daily counts for every trip file already processed, so only new files are downloaded.
+      - name: Restore processed-data cache
+        uses: actions/cache@v4
+        with:
+          path: data/interim
+          key: citibike-interim-${{ github.run_id }}
+          restore-keys: citibike-interim-
+
+      - name: Run pipeline (download, train, backtest, forecast, build site)
+        run: python -m citibike.pipeline --trials "${{ github.event.inputs.trials || '40' }}"
+        env:
+          PYTHONPATH: src
+
+      - name: Save forecast log and README results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add forecasts README.md
+          if ! git diff --staged --quiet; then
+            git commit -m "Monthly forecast: data through $(python -c 'import json;print(json.load(open("site/metrics.json"))["data_end"])')"
+            git push
+          fi
+
+      - name: Keep MLflow tracking database
+        uses: actions/upload-artifact@v4
+        with:
+          name: mlflow-tracking
+          path: mlflow.db
+          retention-days: 90
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
