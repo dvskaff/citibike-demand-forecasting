@@ -1,9 +1,9 @@
 # NYC Citi Bike Demand Forecasting
 
-[![CI](https://github.com/davidskaff/citibike-demand-forecasting/actions/workflows/ci.yml/badge.svg)](https://github.com/davidskaff/citibike-demand-forecasting/actions/workflows/ci.yml)
-[![Monthly forecast](https://github.com/davidskaff/citibike-demand-forecasting/actions/workflows/forecast.yml/badge.svg)](https://github.com/davidskaff/citibike-demand-forecasting/actions/workflows/forecast.yml)
+[![CI](https://github.com/dvskaff/citibike-demand-forecasting/actions/workflows/ci.yml/badge.svg)](https://github.com/dvskaff/citibike-demand-forecasting/actions/workflows/ci.yml)
+[![Monthly forecast](https://github.com/dvskaff/citibike-demand-forecasting/actions/workflows/forecast.yml/badge.svg)](https://github.com/dvskaff/citibike-demand-forecasting/actions/workflows/forecast.yml)
 
-**Live dashboard: [davidskaff.github.io/citibike-demand-forecasting](https://davidskaff.github.io/citibike-demand-forecasting/)**
+**Live dashboard: [dvskaff.github.io/citibike-demand-forecasting](https://dvskaff.github.io/citibike-demand-forecasting/)**
 
 Forecasts daily ridership for New York's Citi Bike system 30 days ahead, using every public trip record since
 2023 and daily weather. The pipeline benchmarks statistical baselines against gradient-boosted models with
@@ -15,18 +15,7 @@ itself every month with GitHub Actions, which republishes the dashboard and scor
 The table below is rewritten automatically after every monthly run.
 
 <!-- RESULTS:START -->
-_Last updated 2026-10-31 23:31 UTC · data 2023-01-01 to 2026-09-30 · 160,324,554 rides · 6 backtest folds of 30 days_
-
-| Model | WAPE | MAE (rides/day) | RMSE | Bias |
-|---|---|---|---|---|
-| LightGBM (Optuna-tuned) ⭐ | 8.5% | 13,644 | 17,312 | -1.5% |
-| LightGBM (default) | 8.6% | 13,807 | 17,638 | -1.4% |
-| XGBoost | 8.8% | 14,036 | 17,676 | -1.7% |
-| AutoETS | 15.4% | 24,621 | 32,367 | -1.4% |
-| Seasonal naive | 16.5% | 26,359 | 35,802 | -1.8% |
-| AutoARIMA | 17.6% | 28,115 | 35,352 | -4.2% |
-
-Conformal intervals on the held-out fold: 80% interval covered 87%, 95% interval covered 97%.
+_Results appear here after the first run of the **Monthly forecast** workflow._
 <!-- RESULTS:END -->
 
 **WAPE** (weighted absolute percentage error) = total absolute error ÷ total rides, so 5% means the forecast
@@ -113,4 +102,3 @@ mlflow ui --backend-store-uri sqlite:///mlflow.db      # browse tracked runs (ne
 - Weather: [Open-Meteo](https://open-meteo.com/) (CC BY 4.0).
 
 ---
-Built by David Skaff · MSc Business Analytics, Ivey Business School
