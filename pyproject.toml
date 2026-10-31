@@ -1,0 +1,17 @@
+[project]
+name = "citibike-demand-forecasting"
+version = "1.0.0"
+description = "Daily NYC Citi Bike demand forecasting with weather, backtesting, conformal intervals, and an auto-updating dashboard."
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 110
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E501"]  # formatter handles line length

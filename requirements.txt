@@ -1,0 +1,18 @@
+# Pinned versions tested together on Python 3.13
+duckdb==2.0.0
+polars==2.1.0
+pandas==2.3.3
+numpy==2.5.4
+pyarrow==26.0.0
+requests==2.34.2
+holidays==0.107
+statsforecast==2.1.1
+lightgbm==4.7.0
+xgboost==3.4.1
+scikit-learn==1.9.1
+optuna==5.0.0
+shap==0.54.1
+mlflow-skinny==3.17.2
+sqlalchemy==2.1.6  # MLflow SQLite tracking backend
+alembic==1.20.1
+plotly==7.1.0
