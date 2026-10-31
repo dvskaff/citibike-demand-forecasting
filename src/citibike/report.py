@@ -25,7 +25,7 @@ BLUE, ORANGE, AQUA, YELLOW, MAGENTA, GREEN, VIOLET = (
 )
 INK, INK2, MUTED, GRID, AXIS, SURFACE = "#0b0b0b", "#52514e", "#898781", "#e1e0d9", "#c3c2b7", "#fcfcfb"
 FONT = 'system-ui, -apple-system, "Segoe UI", sans-serif'
-REPO_URL = "https://github.com/davidskaff/citibike-demand-forecasting"
+REPO_URL = "https://github.com/dvskaff/citibike-demand-forecasting"
 
 
 def _style(fig: go.Figure, title: str = "", height: int = 380, y_title: str = "", **layout) -> go.Figure:
