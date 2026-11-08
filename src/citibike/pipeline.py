@@ -18,6 +18,7 @@ import numpy as np
 import pandas as pd
 import polars as pl
 
+from . import downloads as dl
 from . import evaluation as ev
 from .config import ROOT, Config
 from .explain import shap_summary
@@ -139,7 +140,8 @@ def run(cfg: Config, sample: bool = False) -> dict:
         past_forecast_accuracy(cfg.forecast_log_dir, totals, last_obs) if not sample else pd.DataFrame()
     )
 
-    # 7. Dashboard + README.
+    # 7. Cleaned data for download, dashboard, README.
+    downloads = dl.write(cfg.site_dir, daily, weather, forecast)
     build_site(
         cfg.site_dir,
         daily=daily,
@@ -154,6 +156,7 @@ def run(cfg: Config, sample: bool = False) -> dict:
         features=observed.tail(365),
         tracking=tracking,
         run_info=run_info,
+        downloads=downloads,
     )
     metrics_out = {
         **run_info,

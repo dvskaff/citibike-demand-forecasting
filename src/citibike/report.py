@@ -392,12 +392,28 @@ def build_site(
     features,
     tracking,
     run_info,
+    downloads: list[dict] | None = None,
 ) -> Path:
     site_dir.mkdir(parents=True, exist_ok=True)
     tot = totals.to_pandas().set_index("date")["y"].astype(float)
     tot.index = pd.to_datetime(tot.index)
     forecast = forecast.assign(date=pd.to_datetime(forecast["date"]))
     champion = run_info["champion"]
+    downloads_html = ""
+    if downloads:
+        rows = "".join(
+            f"<tr><td><a href='{d['file']}' download><code>{d['name']}</code></a></td><td>{d['rows']:,}</td>"
+            f"<td style='white-space:nowrap'>{d['kb']:,} KB</td><td style='text-align:left'>{d['description']}"
+            f"<div class='muted' style='font-size:12px'>Columns: {', '.join(d['columns'])}</div></td></tr>"
+            for d in downloads
+        )
+        downloads_html = (
+            "<section id='data'><h2>Download the data</h2><p>The cleaned daily data behind this page, rebuilt on "
+            f"every run: every public Citi Bike trip since {run_info['data_start']} condensed to daily counts, with "
+            "the weather. Free to reuse with credit to Citi Bike (NYCBS Data Use Policy) and Open-Meteo "
+            "(CC BY 4.0).</p><div class='tablewrap'><table><thead><tr><th>File</th><th>Rows</th><th>Size</th>"
+            f"<th style='text-align:left'>What's in it</th></tr></thead><tbody>{rows}</tbody></table></div></section>"
+        )
     baselines = summary[~summary["model"].str.contains("LightGBM|XGBoost")]
     best_baseline = baselines.iloc[0]["model"]
     champ_row = summary.iloc[0]
@@ -511,7 +527,7 @@ def build_site(
   <h1>NYC Citi Bike Demand Forecast</h1>
   <p>Daily ridership for New York's bike-share system, forecast {run_info["horizon"]} days ahead from
   public trip data and weather. Retrained automatically every month with GitHub Actions.
-  <a href="{REPO_URL}">Code on GitHub</a></p>
+  <a href="{REPO_URL}">Code on GitHub</a>{" · <a href='#data'>Download the data</a>" if downloads else ""}</p>
 </div></header>
 <main>
 {sample_banner}
@@ -561,6 +577,7 @@ The right chart shows how temperature alone moves the forecast, split by dry and
 
 <section><h2>Live accuracy tracking</h2>{tracking_html}</section>
 
+{downloads_html}
 <section><h2>How it works</h2><ul class="method">
 <li><b>Data:</b> every public Citi Bike trip file since {
         pd.Timestamp(run_info["data_start"]).strftime("%B %Y")

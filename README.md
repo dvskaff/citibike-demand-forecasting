@@ -3,7 +3,9 @@
 [![CI](https://github.com/dvskaff/citibike-demand-forecasting/actions/workflows/ci.yml/badge.svg)](https://github.com/dvskaff/citibike-demand-forecasting/actions/workflows/ci.yml)
 [![Monthly forecast](https://github.com/dvskaff/citibike-demand-forecasting/actions/workflows/forecast.yml/badge.svg)](https://github.com/dvskaff/citibike-demand-forecasting/actions/workflows/forecast.yml)
 
-**Live dashboard: [dvskaff.github.io/citibike-demand-forecasting](https://dvskaff.github.io/citibike-demand-forecasting/)**
+* **Dashboard:** [the 30-day forecast, retrained monthly](https://dvskaff.github.io/citibike-demand-forecasting/)
+* **Data:** [daily rides with weather (CSV)](https://dvskaff.github.io/citibike-demand-forecasting/data/citibike_daily.csv), cleaned from every public trip since 2023
+* **Forecasts:** [every published forecast](forecasts/), scored once the real numbers are out
 
 Forecasts daily ridership for New York's Citi Bike system 30 days ahead, using every public trip record since
 2023 and daily weather. The pipeline benchmarks statistical baselines against gradient-boosted models with
@@ -61,6 +63,7 @@ flowchart LR
 | **Uncertainty** | Split-conformal 80% and 95% intervals from the champion's relative backtest errors, with coverage checked on a held-out month. | NumPy |
 | **Explainability** | SHAP values for the tuned tree model: overall importance plus the temperature effect. | SHAP |
 | **Tracking** | Every run and model is logged to MLflow (SQLite backend, kept as a workflow artifact). Each forecast is saved to `forecasts/` and scored once the real numbers are published. | MLflow |
+| **Downloads** | The cleaned daily data (totals, rider type, bike type, weather) and the latest forecast are written as CSV files on every run and linked from the dashboard. | pandas |
 | **Automation** | Tests and lint on every push; a monthly job reruns the pipeline, commits the forecast log and results table, and redeploys the dashboard. | GitHub Actions, pytest, ruff, GitHub Pages |
 
 ## Repository layout
@@ -75,6 +78,7 @@ flowchart LR
 │   ├── explain.py      # SHAP
 │   ├── tracking.py     # MLflow logging, forecast log, README results table
 │   ├── report.py       # Plotly dashboard (static HTML for GitHub Pages)
+│   ├── downloads.py    # cleaned daily data + forecast as CSV downloads
 │   ├── sample.py       # synthetic data for tests and the offline demo
 │   └── pipeline.py     # end-to-end entry point
 ├── tests/              # pytest: ingestion, leakage, backtest folds, intervals, weather, end-to-end
