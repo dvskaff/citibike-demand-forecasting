@@ -74,3 +74,10 @@ def build_features(totals: pl.DataFrame, weather: pl.DataFrame, horizon: int) ->
         pl.col("y").shift(MIN_LAG).rolling_mean(28, min_samples=20).alias("roll_mean_28_lag30"),
     ).join(weather, on="date", how="left")
     return frame.select(["date", "y", *FEATURE_COLS, "weather_source"]).to_pandas().set_index("date")
+
+
+def split(feats: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Observed days, and the days to forecast: only those after the last observed day. A day missing from the trip
+    files (no rides published, e.g. a storm shutdown) also has no `y`, but it is history, not something to forecast."""
+    observed = feats[feats["y"].notna()]
+    return observed, feats[feats.index > observed.index.max()]

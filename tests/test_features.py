@@ -5,7 +5,7 @@ import pandas as pd
 import polars as pl
 import pytest
 
-from citibike.features import FEATURE_COLS, LAG_COLS, build_features, daily_totals
+from citibike.features import FEATURE_COLS, LAG_COLS, build_features, daily_totals, split
 from citibike.sample import sample_inputs
 
 
@@ -50,3 +50,13 @@ def test_holidays_flagged(inputs):
     feats = build_features(daily_totals(daily), weather, horizon=30)
     assert feats.loc["2024-07-04", "is_holiday"] == 1
     assert feats.loc["2024-07-03", "day_before_holiday"] == 1
+
+
+def test_a_day_missing_from_history_is_not_forecast(inputs):
+    """A day with no published rides (e.g. a storm shutdown) is history with no label, not a forecast day."""
+    daily, weather = inputs
+    gap = date(2025, 2, 23)
+    feats = build_features(daily_totals(daily.filter(pl.col("date") != gap)), weather, horizon=30)
+    observed, future = split(feats)
+    assert len(future) == 30 and future.index.min() > observed.index.max()
+    assert pd.Timestamp(gap) not in future.index and pd.Timestamp(gap) not in observed.index

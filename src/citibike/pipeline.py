@@ -22,7 +22,7 @@ from . import downloads as dl
 from . import evaluation as ev
 from .config import ROOT, Config
 from .explain import shap_summary
-from .features import build_features, daily_totals
+from .features import build_features, daily_totals, split
 from .models import LightGBMForecaster, XGBoostForecaster, baseline_models
 from .report import build_site
 from .tracking import log_runs, past_forecast_accuracy, save_forecast, update_readme
@@ -63,8 +63,7 @@ def run(cfg: Config, sample: bool = False) -> dict:
 
     totals = daily_totals(daily)
     feats = build_features(totals, weather, cfg.horizon)
-    observed = feats[feats["y"].notna()]
-    future = feats[feats["y"].isna()]
+    observed, future = split(feats)
     last_obs = observed.index.max()
     log.info(
         "Data: %s to %s, %d days, %s rides",
