@@ -17,7 +17,7 @@ itself every month with GitHub Actions, which republishes the dashboard and scor
 The table below is rewritten automatically after every monthly run.
 
 <!-- RESULTS:START -->
-_Last updated 2026-11-09 01:12 UTC · data 2023-01-01 to 2026-10-31 · 165,412,919 rides · 6 backtest folds of 30 days_
+_Last updated 2026-11-09 01:22 UTC · data 2023-01-01 to 2026-10-31 · 165,412,919 rides · 6 backtest folds of 30 days_
 
 | Model | WAPE | MAE (rides/day) | RMSE | Bias |
 |---|---|---|---|---|
