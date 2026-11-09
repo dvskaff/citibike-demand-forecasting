@@ -17,18 +17,18 @@ itself every month with GitHub Actions, which republishes the dashboard and scor
 The table below is rewritten automatically after every monthly run.
 
 <!-- RESULTS:START -->
-_Last updated 2026-10-31 23:47 UTC · data 2023-01-01 to 2026-09-30 · 160,324,554 rides · 6 backtest folds of 30 days_
+_Last updated 2026-11-09 01:12 UTC · data 2023-01-01 to 2026-10-31 · 165,412,919 rides · 6 backtest folds of 30 days_
 
 | Model | WAPE | MAE (rides/day) | RMSE | Bias |
 |---|---|---|---|---|
-| LightGBM (Optuna-tuned) ⭐ | 8.5% | 13,644 | 17,312 | -1.5% |
-| LightGBM (default) | 8.6% | 13,807 | 17,638 | -1.4% |
-| XGBoost | 8.8% | 14,036 | 17,676 | -1.7% |
-| AutoETS | 15.4% | 24,621 | 32,367 | -1.4% |
-| Seasonal naive | 16.5% | 26,359 | 35,802 | -1.8% |
-| AutoARIMA | 17.6% | 28,115 | 35,352 | -4.2% |
+| XGBoost ⭐ | 7.5% | 12,485 | 16,163 | -0.7% |
+| LightGBM (default) | 7.5% | 12,503 | 16,489 | -0.6% |
+| LightGBM (Optuna-tuned) | 7.6% | 12,508 | 16,392 | -1.1% |
+| AutoETS | 15.0% | 24,913 | 33,681 | -2.5% |
+| AutoARIMA | 16.0% | 26,471 | 33,502 | -4.5% |
+| Seasonal naive | 18.5% | 30,699 | 42,568 | -5.5% |
 
-Conformal intervals on the held-out fold: 80% interval covered 87%, 95% interval covered 97%.
+Conformal intervals on the held-out fold: 80% interval covered 87%, 95% interval covered 100%.
 <!-- RESULTS:END -->
 
 **WAPE** (weighted absolute percentage error) = total absolute error ÷ total rides, so 5% means the forecast
